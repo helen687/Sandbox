@@ -23,7 +23,6 @@ namespace CatalogDBContext
             modelBuilder.Entity<Book>(entity => {
                 entity.HasKey(k => k.Id);
                 entity.HasMany(b => b.Reviews);
-                entity.HasOne(b => b.Author);
             });
             modelBuilder.Entity<Review>(entity => {
                 entity.HasKey(k => k.Id);

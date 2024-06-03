@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog", "CatalogWeb\Catalog.csproj", "{8C15BBC1-AC33-48E2-B8BF-1CFFE52B33DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogWeb", "CatalogWeb\CatalogWeb.csproj", "{8C15BBC1-AC33-48E2-B8BF-1CFFE52B33DA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogCore", "Core\CatalogCore.csproj", "{2B8D1E09-9AF7-4938-A3AB-23A573E35770}"
 EndProject

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata;
 
 namespace CatalogCore
 {
@@ -14,6 +15,7 @@ namespace CatalogCore
 
         public DateOnly DeathDate { get; set; } = new DateOnly();
 
+        public Book Book { get; set; } = null!;
         public Author() { }
         public Author(Guid id,string firstName, string middleName, string lastName, DateOnly birthDate, DateOnly deathDate)
         {

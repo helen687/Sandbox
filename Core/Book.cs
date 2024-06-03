@@ -49,7 +49,7 @@ namespace CatalogCore
 
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid? AuthorId { get; set; } = Guid.NewGuid();
+        public Guid? AuthorId { get; set; } = null;
 
         public string Title { get; set; } = String.Empty;
 
@@ -57,7 +57,7 @@ namespace CatalogCore
 
         public DateOnly IssueDate { get; set; } = new DateOnly();
 
-        public Author Author { get; set; } = new Author();
+        public Author? Author { get; set; } = null;
 
         public List<Review> Reviews { get; set; } = new List<Review>();
     }

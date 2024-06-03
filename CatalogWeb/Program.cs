@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using CatalogDBContext;
+using Microsoft.Extensions.Options;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DBContext>(options =>
-          options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+          options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+          b => b.MigrationsAssembly("CatalogWeb")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
