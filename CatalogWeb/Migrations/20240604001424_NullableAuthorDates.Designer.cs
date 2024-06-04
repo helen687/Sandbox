@@ -4,6 +4,7 @@ using CatalogDBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CatalogWeb.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20240604001424_NullableAuthorDates")]
+    partial class NullableAuthorDates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,7 +76,9 @@ namespace CatalogWeb.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("AuthorId")
+                        .IsUnique()
+                        .HasFilter("[AuthorId] IS NOT NULL");
 
                     b.ToTable("Books");
                 });
@@ -108,8 +113,8 @@ namespace CatalogWeb.Migrations
             modelBuilder.Entity("CatalogCore.Book", b =>
                 {
                     b.HasOne("CatalogCore.Author", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
+                        .WithOne("Book")
+                        .HasForeignKey("CatalogCore.Book", "AuthorId");
 
                     b.Navigation("Author");
                 });
@@ -119,6 +124,12 @@ namespace CatalogWeb.Migrations
                     b.HasOne("CatalogCore.Book", null)
                         .WithMany("Reviews")
                         .HasForeignKey("BookId");
+                });
+
+            modelBuilder.Entity("CatalogCore.Author", b =>
+                {
+                    b.Navigation("Book")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CatalogCore.Book", b =>
