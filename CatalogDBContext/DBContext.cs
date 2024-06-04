@@ -18,14 +18,15 @@ namespace CatalogDBContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Author>(entity => {
-                entity.HasKey(k => k.Id);
+                entity.HasKey(a => a.Id);
             });
             modelBuilder.Entity<Book>(entity => {
-                entity.HasKey(k => k.Id);
+                entity.HasKey(b => b.Id);
+                entity.HasOne(b => b.Author);
                 entity.HasMany(b => b.Reviews);
             });
             modelBuilder.Entity<Review>(entity => {
-                entity.HasKey(k => k.Id);
+                entity.HasKey(r => r.Id);
             });
         }
     }

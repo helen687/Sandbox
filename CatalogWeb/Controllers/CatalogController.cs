@@ -11,7 +11,7 @@ using System;
 namespace WebApplication1.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class CatalogController : ControllerBase
     {
         private readonly ILogger<CatalogController> _logger;
@@ -23,25 +23,51 @@ namespace WebApplication1.Controllers
             _context = context;
         }
 
-        [HttpGet(Name = "Get")]
-        public IEnumerable<Book> Get()
+        [HttpGet(Name = "GetList")]
+        public IEnumerable<Book> GetList()
         {
-            return _context.Books.ToArray();
+            try
+            {
+                return _context.Books.Include(b => b.Author).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retreiving a list of books", ex);
+            }
         }
 
         [HttpPut(Name = "Put")]
         public void Put(Book book)
         {
-            _context.Books.Add(book);
-            _context.SaveChanges();
+            try
+            {
+                _context.Books.Add(book);
+                _context.SaveChanges();
+            }
+            catch (Exception ex) {
+                throw new Exception("An error occurred while saving a book", ex);
+            }
         }
 
         [HttpPost(Name = "Post")]
         public void Post(Book book)
         {
-            var existingBook = _context.Books.Find(book.Id);
-            if (existingBook != null) {
-                _context.Books.Update(book);
+            try
+            {
+                var existingBook = _context.Books.Where(b => b.Id == book.Id).Include(b => b.Author).FirstOrDefault();
+                if (existingBook != null)
+                {
+                    existingBook.SetPropertiesFromAnotherBook(book);
+                    _context.Books.Update(existingBook);
+                    _context.SaveChanges();
+                }
+                else {
+                    throw new Exception("Book not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while updating a book", ex);
             }
         }
 

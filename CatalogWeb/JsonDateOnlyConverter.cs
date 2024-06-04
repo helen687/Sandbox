@@ -19,8 +19,7 @@ namespace CatalogWeb
         // This is the serializer
         public override void Write(Utf8JsonWriter writer, DateOnly value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.ToString(
-                DateFormat, CultureInfo.InvariantCulture));
+            writer.WriteStringValue(value.ToString());
         }
     }
 }

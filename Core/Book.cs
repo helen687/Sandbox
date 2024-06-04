@@ -20,10 +20,24 @@ namespace CatalogCore
         {
             this.Id = id; this.Title = title;
             this.Description = description; this.IssueDate = issueDate;
-            this.AuthorId = authorId;  this.Author = (authorId == null) ? null : author; 
+            this.AuthorId = authorId;  this.Author = author; 
             this.Reviews = reviews;
         }
 
+        public void SetPropertiesFromAnotherBook(Book anotherBook) {
+            this.Id = anotherBook.Id;
+            this.Title = anotherBook.Title;
+            this.Description = anotherBook.Description; 
+            this.IssueDate = anotherBook.IssueDate;
+            this.AuthorId = anotherBook.AuthorId; 
+            this.Author.Id = anotherBook.Author.Id;
+            this.Author.FirstName = anotherBook.Author.FirstName;
+            this.Author.MiddleName = anotherBook.Author.MiddleName;
+            this.Author.LastName = anotherBook.Author.LastName;
+            this.Author.BirthDate = anotherBook.Author.BirthDate;
+            this.Author.DeathDate = anotherBook.Author.DeathDate;
+            //this.Reviews = anotherBook.reviews;
+        }
         public void AddReview(Review review)
         {
             this.Reviews.Add(review);
@@ -49,7 +63,7 @@ namespace CatalogCore
 
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid? AuthorId { get; set; } = null;
+        public Guid? AuthorId { get; set; } = Guid.NewGuid();
 
         public string Title { get; set; } = String.Empty;
 
@@ -57,7 +71,7 @@ namespace CatalogCore
 
         public DateOnly IssueDate { get; set; } = new DateOnly();
 
-        public Author? Author { get; set; } = null;
+        public Author Author { get; set; }
 
         public List<Review> Reviews { get; set; } = new List<Review>();
     }
