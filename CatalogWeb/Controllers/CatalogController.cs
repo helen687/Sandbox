@@ -23,6 +23,29 @@ namespace WebApplication1.Controllers
             _context = context;
         }
 
+        [HttpGet(Name = "Get")]
+        [Route("{id:Guid}")]
+        public Book Get(Guid id)
+        {
+            try
+            {
+                var existingBook = _context.Books.Where(b => b.Id == id).Include(b => b.Author).FirstOrDefault();
+                if (existingBook != null)
+                {
+                    _context.Books.Remove(existingBook);
+                    return existingBook;
+                }
+                else
+                {
+                    throw new Exception("Book not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving a book", ex);
+            }
+        }
+
         [HttpGet(Name = "GetList")]
         public IEnumerable<Book> GetList()
         {
@@ -36,6 +59,7 @@ namespace WebApplication1.Controllers
             }
         }
 
+        [Route("[controller]/[action]")]
         [HttpPut(Name = "Put")]
         public void Put(Book book)
         {
@@ -44,11 +68,13 @@ namespace WebApplication1.Controllers
                 _context.Books.Add(book);
                 _context.SaveChanges();
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 throw new Exception("An error occurred while saving a book", ex);
             }
         }
 
+        [Route("[controller]/[action]")]
         [HttpPost(Name = "Post")]
         public void Post(Book book)
         {
@@ -61,7 +87,8 @@ namespace WebApplication1.Controllers
                     _context.Books.Update(existingBook);
                     _context.SaveChanges();
                 }
-                else {
+                else
+                {
                     throw new Exception("Book not found");
                 }
             }
@@ -72,12 +99,21 @@ namespace WebApplication1.Controllers
         }
 
         [HttpDelete(Name = "Delete")]
-        public void Delete(Book book)
+        [Route("{id}")]
+        public void Delete(Guid id)
         {
-            var existingBook = _context.Books.Find(book.Id);
-            if (existingBook != null)
+            try
             {
-                _context.Books.Remove(book);
+                var existingBook = _context.Books.Where(b => b.Id == id).FirstOrDefault();
+                if (existingBook != null)
+                {
+                    _context.Books.Remove(existingBook);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while removing a book", ex);
             }
         }
     }
