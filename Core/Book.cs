@@ -31,9 +31,7 @@ namespace CatalogCore
             this.IssueDate = anotherBook.IssueDate;
             this.AuthorId = anotherBook.AuthorId; 
             this.Author.Id = anotherBook.Author.Id;
-            this.Author.FirstName = anotherBook.Author.FirstName;
-            this.Author.MiddleName = anotherBook.Author.MiddleName;
-            this.Author.LastName = anotherBook.Author.LastName;
+            this.Author.FullName = anotherBook.Author.FullName;
             this.Author.BirthDate = anotherBook.Author.BirthDate;
             this.Author.DeathDate = anotherBook.Author.DeathDate;
             //this.Reviews = anotherBook.reviews;

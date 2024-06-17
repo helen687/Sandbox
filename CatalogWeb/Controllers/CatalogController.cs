@@ -61,12 +61,13 @@ namespace WebApplication1.Controllers
 
         [Route("[controller]/[action]")]
         [HttpPut(Name = "Put")]
-        public void Put(Book book)
+        public bool Put(Book book)
         {
             try
             {
                 _context.Books.Add(book);
                 _context.SaveChanges();
+                return true;
             }
             catch (Exception ex)
             {
@@ -76,7 +77,7 @@ namespace WebApplication1.Controllers
 
         [Route("[controller]/[action]")]
         [HttpPost(Name = "Post")]
-        public void Post(Book book)
+        public bool Post(Book book)
         {
             try
             {
@@ -86,6 +87,7 @@ namespace WebApplication1.Controllers
                     existingBook.SetPropertiesFromAnotherBook(book);
                     _context.Books.Update(existingBook);
                     _context.SaveChanges();
+                    return true;
                 }
                 else
                 {
