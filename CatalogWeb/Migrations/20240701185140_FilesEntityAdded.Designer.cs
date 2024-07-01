@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CatalogWeb.Migrations
 {
     [DbContext(typeof(CatalogDBContext))]
-    [Migration("20240617214001_AuthorFullName")]
-    partial class AuthorFullName
+    [Migration("20240701185140_FilesEntityAdded")]
+    partial class FilesEntityAdded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,6 +71,28 @@ namespace CatalogWeb.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("CatalogCore.FileUpload.Entities.FileDetails", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("FileData")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FileType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FileDetails");
                 });
 
             modelBuilder.Entity("CatalogCore.Review", b =>

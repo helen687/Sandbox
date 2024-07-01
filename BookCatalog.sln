@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogWeb", "CatalogWeb\Ca
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogCore", "Core\CatalogCore.csproj", "{2B8D1E09-9AF7-4938-A3AB-23A573E35770}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogDBContext", "CatalogDBContext\CatalogDBContext.csproj", "{C41D6BB5-D39D-4FF5-8E36-968EAC2B1191}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogDB", "CatalogDBContext\CatalogDB.csproj", "{C41D6BB5-D39D-4FF5-8E36-968EAC2B1191}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

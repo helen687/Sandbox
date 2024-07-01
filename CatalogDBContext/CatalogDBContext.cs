@@ -2,19 +2,20 @@
 using Microsoft.EntityFrameworkCore;
 using CatalogCore;
 using System.ComponentModel.DataAnnotations.Schema;
+using CatalogCore.FileUpload.Entities;
 
-namespace CatalogDBContext
+namespace CatalogDB
 {
-    public class DBContext : DbContext
+    public class CatalogDBContext : DbContext
     {
-        public DBContext(DbContextOptions<DBContext> options) : base(options)
+        public CatalogDBContext(DbContextOptions<CatalogDBContext> options) : base(options)
         {
         }
 
         public DbSet<Book> Books { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Author> Authors { get; set; }
-
+        public DbSet<FileDetails> FileDetails { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Author>(entity => {

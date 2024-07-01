@@ -1,5 +1,5 @@
 using CatalogCore;
-using CatalogDBContext;
+using CatalogDB;
 using CatalogWeb;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,16 +8,16 @@ using System.Runtime.Intrinsics.X86;
 using System.Text.Json;
 using System;
 
-namespace WebApplication1.Controllers
+namespace CatalogWeb.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
     public class CatalogController : ControllerBase
     {
         private readonly ILogger<CatalogController> _logger;
-        private readonly DBContext _context;
+        private readonly CatalogDBContext _context;
 
-        public CatalogController(ILogger<CatalogController> logger, DBContext context)
+        public CatalogController(ILogger<CatalogController> logger, CatalogDBContext context)
         {
             _logger = logger;
             _context = context;

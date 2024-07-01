@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CatalogDBContext\CatalogDBContext.csproj" />
+    <ProjectReference Include="..\CatalogDBContext\CatalogDB.csproj" />
   </ItemGroup>
 
 </Project>
