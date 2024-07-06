@@ -1,19 +1,19 @@
-﻿using CatalogCore.FileUpload.Entities;
+﻿using CatalogCore;
 using CatalogWeb.Models;
 using CatalogWeb.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static System.Net.Mime.MediaTypeNames;
+//using static System.Net.Mime.MediaTypeNames;
 
 namespace CatalogWeb.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
-    public class FilesController : ControllerBase
+    public class ImageController : ControllerBase
     {
         private readonly IFileService _uploadService;
 
-        public FilesController(IFileService uploadService)
+        public ImageController(IFileService uploadService)
         {
             _uploadService = uploadService;
         }
@@ -33,7 +33,7 @@ namespace CatalogWeb.Controllers
 
             try
             {
-                await _uploadService.PostFileAsync(fileDetails.Id, fileDetails.FileDetails, fileDetails.FileType);
+                await _uploadService.PostFileAsync(fileDetails.Id, fileDetails.FileDetails);
                 return Ok();
             }
             catch (Exception)
@@ -69,7 +69,7 @@ namespace CatalogWeb.Controllers
         /// <summary>
         /// Download File
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet(Name = "Download")]
         [Route("{id:Guid}")]
@@ -85,6 +85,25 @@ namespace CatalogWeb.Controllers
                 var file = _uploadService.GetFileDetails(id);
                 var content = new MemoryStream(file.Result.FileData);
                 return File(content, "image/*", file.Result.FileName);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Get file Details
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Route("{id:Guid}")]
+        public async Task<Image> Get(Guid id)
+        {
+            try
+            {
+                var file = await _uploadService.GetFileDetails(id);
+                return file;
             }
             catch (Exception)
             {

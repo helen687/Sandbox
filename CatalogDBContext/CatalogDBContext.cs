@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using CatalogCore;
 using System.ComponentModel.DataAnnotations.Schema;
-using CatalogCore.FileUpload.Entities;
 
 namespace CatalogDB
 {
@@ -15,7 +14,7 @@ namespace CatalogDB
         public DbSet<Book> Books { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Author> Authors { get; set; }
-        public DbSet<FileDetails> FileDetails { get; set; }
+        public DbSet<Image> Images { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Author>(entity => {

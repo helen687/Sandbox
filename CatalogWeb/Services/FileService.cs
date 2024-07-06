@@ -1,6 +1,4 @@
-﻿using CatalogCore.FileUpload.Entities;
-using CatalogWeb.Services;
-using CatalogCore;
+﻿using CatalogWeb.Services;
 using Microsoft.EntityFrameworkCore;
 using CatalogDB;
 
@@ -15,15 +13,14 @@ namespace CatalogCore.FileUpload.Services
             this.dbContextClass = dbContextClass;
         }
 
-        public async Task PostFileAsync(Guid id, IFormFile fileData, FileType fileType)
+        public async Task PostFileAsync(Guid id, IFormFile fileData)
         {
             try
             {
-                var fileDetails = new FileDetails()
+                var fileDetails = new Image()
                 {
                     Id = id,
                     FileName = fileData.FileName,
-                    FileType = fileType,
                 };
 
                 using (var stream = new MemoryStream())
@@ -32,7 +29,7 @@ namespace CatalogCore.FileUpload.Services
                     fileDetails.FileData = stream.ToArray();
                 }
 
-                var result = dbContextClass.FileDetails.Add(fileDetails);
+                var result = dbContextClass.Images.Add(fileDetails);
                 await dbContextClass.SaveChangesAsync();
             }
             catch (Exception)
@@ -70,11 +67,11 @@ namespace CatalogCore.FileUpload.Services
         //    }
         //}
 
-        public Task<FileDetails> GetFileDetails(Guid id)
+        public async Task<Image> GetFileDetails(Guid id)
         {
             try
             {
-                var file = dbContextClass.FileDetails.Where(x => x.Id == id).FirstOrDefaultAsync();
+                var file = await dbContextClass.Images.Where(x => x.Id == id).FirstOrDefaultAsync();
                 return file;
             }
             catch (Exception)

@@ -4,6 +4,7 @@ using CatalogDB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CatalogWeb.Migrations
 {
     [DbContext(typeof(CatalogDBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20240706200058_AddedImageIdToBook")]
+    partial class AddedImageIdToBook
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,7 @@ namespace CatalogWeb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("CatalogCore.Book", b =>
@@ -72,7 +75,7 @@ namespace CatalogWeb.Migrations
 
                     b.HasIndex("ImageId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("CatalogCore.Image", b =>
@@ -91,7 +94,7 @@ namespace CatalogWeb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Images", (string)null);
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("CatalogCore.Review", b =>
@@ -118,7 +121,7 @@ namespace CatalogWeb.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("CatalogCore.Book", b =>

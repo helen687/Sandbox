@@ -4,6 +4,7 @@ using CatalogDB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CatalogWeb.Migrations
 {
     [DbContext(typeof(CatalogDBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20240706195325_RenamedFileToImage")]
+    partial class RenamedFileToImage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,7 @@ namespace CatalogWeb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("CatalogCore.Book", b =>
@@ -56,9 +59,6 @@ namespace CatalogWeb.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ImageId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateOnly>("IssueDate")
                         .HasColumnType("date");
 
@@ -70,12 +70,10 @@ namespace CatalogWeb.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.HasIndex("ImageId");
-
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("CatalogCore.Image", b =>
+            modelBuilder.Entity("CatalogCore.FileUpload.Entities.Image", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -89,9 +87,12 @@ namespace CatalogWeb.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("FileType")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Images", (string)null);
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("CatalogCore.Review", b =>
@@ -118,7 +119,7 @@ namespace CatalogWeb.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("CatalogCore.Book", b =>
@@ -127,13 +128,7 @@ namespace CatalogWeb.Migrations
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
-                    b.HasOne("CatalogCore.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId");
-
                     b.Navigation("Author");
-
-                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("CatalogCore.Review", b =>

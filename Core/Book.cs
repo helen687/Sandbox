@@ -11,31 +11,23 @@ namespace CatalogCore
     public class Book
     {
         public Book() { }
-        public Book(Guid id, Guid? authorId,
+        public Book(Guid id, 
+                    Guid? authorId,
+                    Guid? imageId,
                     string title,
                     string description,
                     DateOnly issueDate,
                     Author author,
+                    Image? image,
                     List<Review> reviews)
         {
             this.Id = id; this.Title = title;
             this.Description = description; this.IssueDate = issueDate;
-            this.AuthorId = authorId;  this.Author = author; 
+            this.AuthorId = authorId;  this.Author = author;
+            this.ImageId = imageId; this.Image = Image;
             this.Reviews = reviews;
         }
 
-        public void SetPropertiesFromAnotherBook(Book anotherBook) {
-            this.Id = anotherBook.Id;
-            this.Title = anotherBook.Title;
-            this.Description = anotherBook.Description; 
-            this.IssueDate = anotherBook.IssueDate;
-            this.AuthorId = anotherBook.AuthorId; 
-            this.Author.Id = anotherBook.Author.Id;
-            this.Author.FullName = anotherBook.Author.FullName;
-            this.Author.BirthDate = anotherBook.Author.BirthDate;
-            this.Author.DeathDate = anotherBook.Author.DeathDate;
-            //this.Reviews = anotherBook.reviews;
-        }
         public void AddReview(Review review)
         {
             this.Reviews.Add(review);
@@ -62,6 +54,7 @@ namespace CatalogCore
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
         public Guid? AuthorId { get; set; } = Guid.NewGuid();
+        public Guid? ImageId { get; set; } = null;
 
         public string Title { get; set; } = String.Empty;
 
@@ -70,7 +63,7 @@ namespace CatalogCore
         public DateOnly IssueDate { get; set; } = new DateOnly();
 
         public Author Author { get; set; }
-
+        public Image? Image { get; set; }
         public List<Review> Reviews { get; set; } = new List<Review>();
     }
 }

@@ -1,13 +1,13 @@
-﻿using CatalogCore.FileUpload.Entities;
+﻿using CatalogCore;
 
 namespace CatalogWeb.Services
 {
     public interface IFileService
     {
-        public Task PostFileAsync(Guid id, IFormFile fileData, FileType fileType);
+        public Task PostFileAsync(Guid id, IFormFile fileData);
 
         //public Task PostMultiFileAsync(List<FileUploadModel> fileData);
 
-        public Task<FileDetails> GetFileDetails(Guid id);
+        public Task<Image> GetFileDetails(Guid id);
     }
 }
