@@ -97,6 +97,7 @@ namespace CatalogWeb.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [HttpGet(Name = "Get")]
         [Route("{id:Guid}")]
         public async Task<Image> Get(Guid id)
         {
