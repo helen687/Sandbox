@@ -33,7 +33,6 @@ namespace CatalogWeb.Controllers
                 var existingBook = _context.Books.Where(b => b.Id == id).Include(b => b.Author).FirstOrDefault();
                 if (existingBook != null)
                 {
-                    _context.Books.Remove(existingBook);
                     return BookToModel(existingBook);
                 }
                 else
@@ -67,7 +66,7 @@ namespace CatalogWeb.Controllers
             try
             {
                 var book = new Book();
-                SetModelAttributesToToBook(bookModel, book, _context);
+                SetModelAttributesToBook(bookModel, book, _context);
                 _context.Books.Add(book);
                 _context.SaveChanges();
                 return true;
@@ -87,7 +86,7 @@ namespace CatalogWeb.Controllers
                 var existingBook = _context.Books.Where(b => b.Id == bookModel.Id).Include(b => b.Author).FirstOrDefault();
                 if (existingBook != null)
                 {
-                    SetModelAttributesToToBook(bookModel, existingBook, _context);
+                    SetModelAttributesToBook(bookModel, existingBook, _context);
                     _context.Books.Update(existingBook);
                     _context.SaveChanges();
                     return true;
@@ -129,7 +128,7 @@ namespace CatalogWeb.Controllers
                 Id = book.Id,
                 Title = book.Title,
                 Description = book.Description,
-                IssueDate = book.IssueDate,
+                IssueDate = book.IssueDate.ToDateTime(new TimeOnly(0, 0, 0)),
                 AuthorId = book.AuthorId,
                 Author = book.Author,
                 ImageId = book.ImageId,
@@ -137,19 +136,23 @@ namespace CatalogWeb.Controllers
             };
         }
 
-        private static void SetModelAttributesToToBook(BookModel model, Book book, CatalogDBContext context)
+        private static void SetModelAttributesToBook(BookModel model, Book book, CatalogDBContext context)
         {
             if (book.Id != model.Id)
                 throw new Exception("Book doesn't exist");
+
 
             if(book.Title != model.Title)
                 book.Title = model.Title;
             if(book.Description != model.Description)
                 book.Description = model.Description;
-            if (book.IssueDate != model.IssueDate)
-                book.IssueDate = model.IssueDate;
+            var dateOnly = DateOnly.FromDateTime(model.IssueDate);
+            if (book.IssueDate != dateOnly)
+                book.IssueDate = dateOnly;
             if (book.AuthorId != model.AuthorId)
                 book.AuthorId = model.AuthorId;
+            if (book.Author.FullName != model.Author.FullName)
+                book.Author.FullName = model.Author.FullName;
             if (book.ImageId != model.ImageId)
             {
                 book.ImageId = model.ImageId;

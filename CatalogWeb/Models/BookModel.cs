@@ -13,7 +13,7 @@ namespace CatalogWeb.Models
 
         public string Description { get; set; } = String.Empty;
 
-        public DateOnly IssueDate { get; set; } = new DateOnly();
+        public DateTime IssueDate { get; set; } = new DateTime();
 
         public Author Author { get; set; }
         public List<Review> Reviews { get; set; } = new List<Review>();
