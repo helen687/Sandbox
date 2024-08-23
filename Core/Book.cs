@@ -10,7 +10,10 @@ namespace CatalogCore
 {
     public class Book
     {
-        public Book() { }
+        public Book() {
+            this.Author = new Author();
+            this.AuthorId = this.Author.Id;
+        }
         public Book(Guid id, 
                     Guid? authorId,
                     Guid? imageId,

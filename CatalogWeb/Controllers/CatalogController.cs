@@ -138,9 +138,9 @@ namespace CatalogWeb.Controllers
 
         private static void SetModelAttributesToBook(BookModel model, Book book, CatalogDBContext context)
         {
+            // for new book
             if (book.Id != model.Id)
-                throw new Exception("Book doesn't exist");
-
+                book.Id = model.Id;
 
             if(book.Title != model.Title)
                 book.Title = model.Title;
