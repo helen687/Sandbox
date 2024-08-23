@@ -9,14 +9,12 @@ namespace CatalogCore
         public Guid Id { get; set; } = Guid.NewGuid();
 
         public string FullName { get; set; } = string.Empty;
-        public DateOnly? BirthDate { get; set; } = null;
 
         public Author() { }
-        public Author(Guid id,string fullName, string middleName, string lastName, DateOnly birthDate)
+        public Author(Guid id,string fullName, string middleName, string lastName)
         {
             Id = id;
             FullName = fullName;
-            BirthDate = birthDate;
         }
     }
 }
