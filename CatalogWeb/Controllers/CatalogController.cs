@@ -46,16 +46,24 @@ namespace CatalogWeb.Controllers
             }
         }
 
-        [HttpGet(Name = "GetList")]
-        public IEnumerable<BookModel> GetList()
+        [Route("{length:int}/{pageIndex:int}/{pageSize:int}/{previousPageIndex:int}")]
+        public PaginatorResponseModel GetList(int length, int pageIndex, int pageSize, int previousPageIndex)
         {
+            var ret = new PaginatorResponseModel();
+
             try
             {
-                return _context.Books.Include(b => b.Author).Select(x => BookToModel(x)).ToList();
+                var datasource = _context.Books.Include(b => b.Author).Select(x => BookToModel(x)).ToList();
+                ret.Length = datasource.Count;
+                ret.PageIndex = pageIndex;
+                ret.PageSize = pageSize;
+                ret.DataSource = datasource.Skip(pageIndex * pageSize).Take(pageSize).ToArray();
+                ret.Error = "";
+                return ret;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while retreiving a list of books", ex);
+                ret.Error = "An error occurred while retreiving a list of books";
             }
         }
 
