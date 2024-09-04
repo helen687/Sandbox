@@ -3,12 +3,10 @@ using CatalogDB;
 using CatalogWeb;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.Intrinsics.X86;
-using System.Text.Json;
-using System;
 using CatalogWeb.Models;
-using static System.Net.Mime.MediaTypeNames;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Net.Http.Headers;
+using System.Linq;
 
 namespace CatalogWeb.Controllers
 {
@@ -46,25 +44,40 @@ namespace CatalogWeb.Controllers
             }
         }
 
-        [Route("{length:int}/{pageIndex:int}/{pageSize:int}/{previousPageIndex:int}")]
-        public PaginatorResponseModel GetList(int length, int pageIndex, int pageSize, int previousPageIndex)
+        [Route("{sortBy}/{sortOrder}/{pageIndex:int}/{pageSize:int}/{filterValue?}")]
+        public PaginatorResponseModel GetList(string sortBy, string sortOrder, int pageIndex, int pageSize, string filterValue = "")
         {
             var ret = new PaginatorResponseModel();
 
             try
             {
                 var datasource = _context.Books.Include(b => b.Author).Select(x => BookToModel(x)).ToList();
+                if (filterValue != null && filterValue != String.Empty) {
+                    datasource = datasource.Where(x => x.Title.ToLower().Contains(filterValue.ToLower())).ToList();
+                }
                 ret.Length = datasource.Count;
                 ret.PageIndex = pageIndex;
                 ret.PageSize = pageSize;
-                ret.DataSource = datasource.Skip(pageIndex * pageSize).Take(pageSize).ToArray();
+                switch (sortBy) {
+                    case "title":
+                        datasource = datasource.OrderBy(x => x.Title).ToList();
+                        break;
+                    case "author.fullName":
+                        datasource = datasource.OrderBy(x => x.Author.FullName).ToList();
+                        break;
+                } 
+                if(sortOrder == "desc") {
+                    datasource.Reverse();
+                }
+                datasource = datasource.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+                ret.DataSource = datasource.ToArray();
                 ret.Error = "";
-                return ret;
             }
             catch (Exception ex)
             {
                 ret.Error = "An error occurred while retreiving a list of books";
             }
+            return ret;
         }
 
         [Route("[controller]/[action]")]
