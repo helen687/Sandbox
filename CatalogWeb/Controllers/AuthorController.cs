@@ -40,7 +40,7 @@ namespace CatalogWeb.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while retrieving a book", ex);
+                throw new Exception("An error occurred while retrieving an autor", ex);
             }
         }
 
