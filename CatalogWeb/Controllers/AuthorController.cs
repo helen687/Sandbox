@@ -53,7 +53,7 @@ namespace CatalogWeb.Controllers
                 if (filterValue != null && filterValue != String.Empty) {
                     datasource = datasource.Where(x => x.FullName.ToLower().Contains(filterValue.ToLower())).ToList();
                 }
-                return datasource;
+                return datasource.OrderBy(a => a.FullName).ToList();
             }
             catch (Exception ex)
             {

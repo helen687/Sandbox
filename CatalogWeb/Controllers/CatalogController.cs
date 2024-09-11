@@ -7,6 +7,7 @@ using CatalogWeb.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Net.Http.Headers;
 using System.Linq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CatalogWeb.Controllers
 {
@@ -88,6 +89,20 @@ namespace CatalogWeb.Controllers
             {
                 var book = new Book();
                 SetModelAttributesToBook(bookModel, book, _context);
+                // create new author or use existing
+                var existingAuthor = _context.Authors.Where(a => a.FullName.Trim().ToLower() == bookModel.Author.FullName).FirstOrDefault();
+                if (existingAuthor != null)
+                {
+                    book.AuthorId = existingAuthor.Id;
+                    book.Author = null;
+                }
+                else
+                {
+                    var newAuthor = new Author();
+                    newAuthor.FullName = bookModel.Author.FullName;
+                    book.AuthorId = newAuthor.Id;
+                    _context.Authors.Add(newAuthor);
+                }
                 _context.Books.Add(book);
                 _context.SaveChanges();
                 return true;
@@ -108,6 +123,22 @@ namespace CatalogWeb.Controllers
                 if (existingBook != null)
                 {
                     SetModelAttributesToBook(bookModel, existingBook, _context);
+                    if (bookModel.Author.FullName != existingBook.Author.FullName)
+                    {
+                        // create new author or use existing
+                        var existingAuthor = _context.Authors.Where(a => a.FullName.Trim().ToLower() == bookModel.Author.FullName).FirstOrDefault();
+                        if (existingAuthor != null)
+                        {
+                            existingBook.AuthorId = existingAuthor.Id;
+                        }
+                        else {
+                            var newAuthor = new Author();
+                            newAuthor.FullName = bookModel.Author.FullName;
+                            existingBook.AuthorId = newAuthor.Id;
+                            _context.Authors.Add(newAuthor);
+                        }
+                    }
+
                     _context.Books.Update(existingBook);
                     _context.SaveChanges();
                     return true;
@@ -170,10 +201,6 @@ namespace CatalogWeb.Controllers
             var dateOnly = DateOnly.FromDateTime(model.IssueDate);
             if (book.IssueDate != dateOnly)
                 book.IssueDate = dateOnly;
-            if (book.AuthorId != model.AuthorId)
-                book.AuthorId = model.AuthorId;
-            if (book.Author.FullName != model.Author.FullName)
-                book.Author.FullName = model.Author.FullName;
             if (book.ImageId != model.ImageId)
             {
                 book.ImageId = model.ImageId;
