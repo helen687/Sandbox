@@ -15,7 +15,7 @@ namespace CatalogWeb.Models
 
         public DateTime IssueDate { get; set; } = new DateTime();
 
-        public Author Author { get; set; }
+        public AuthorModel Author { get; set; }
         public List<Review> Reviews { get; set; } = new List<Review>();
 
     }

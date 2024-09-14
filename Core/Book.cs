@@ -11,11 +11,9 @@ namespace CatalogCore
     public class Book
     {
         public Book() {
-            this.Author = new Author();
-            this.AuthorId = this.Author.Id;
+            this.Authors = new List<Author>();
         }
         public Book(Guid id, 
-                    Guid? authorId,
                     Guid? imageId,
                     string title,
                     string description,
@@ -26,7 +24,8 @@ namespace CatalogCore
         {
             this.Id = id; this.Title = title;
             this.Description = description; this.IssueDate = issueDate;
-            this.AuthorId = authorId;  this.Author = author;
+            this.Authors = new List<Author>();
+            this.Authors.Add(author);
             this.ImageId = imageId; this.Image = Image;
             this.Reviews = reviews;
         }
@@ -56,7 +55,6 @@ namespace CatalogCore
 
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid? AuthorId { get; set; } = Guid.NewGuid();
         public Guid? ImageId { get; set; } = null;
 
         public string Title { get; set; } = String.Empty;
@@ -65,7 +63,7 @@ namespace CatalogCore
 
         public DateOnly IssueDate { get; set; } = new DateOnly();
 
-        public Author Author { get; set; }
+        public List<Author> Authors { get; set; }
         public Image? Image { get; set; }
         public List<Review> Reviews { get; set; } = new List<Review>();
     }

@@ -10,6 +10,8 @@ namespace CatalogCore
 
         public string FullName { get; set; } = string.Empty;
 
+        public List<Book> Books { get; set; }
+
         public Author() { }
         public Author(Guid id,string fullName, string middleName, string lastName)
         {

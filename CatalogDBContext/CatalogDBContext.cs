@@ -22,7 +22,7 @@ namespace CatalogDB
             });
             modelBuilder.Entity<Book>(entity => {
                 entity.HasKey(b => b.Id);
-                entity.HasOne(b => b.Author);
+                entity.HasMany(b => b.Authors).WithMany(a => a.Books);
                 entity.HasMany(b => b.Reviews);
             });
             modelBuilder.Entity<Review>(entity => {
