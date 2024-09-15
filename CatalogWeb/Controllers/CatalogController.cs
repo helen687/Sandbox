@@ -63,8 +63,8 @@ namespace CatalogWeb.Controllers
                     case "title":
                         datasource = datasource.OrderBy(x => x.Title).ToList();
                         break;
-                    case "author.fullName":
-                        datasource = datasource.OrderBy(x => x.Author.FullName).ToList();
+                    case "authorsNames":
+                        datasource = datasource.OrderBy(x => x.AuthorsNames).ToList();
                         break;
                 } 
                 if(sortOrder == "desc") {
@@ -90,19 +90,6 @@ namespace CatalogWeb.Controllers
                 var book = new Book();
                 SetModelAttributesToBook(bookModel, book, _context);
                 
-                // create new author or use existing
-                var existingAuthor = _context.Authors.Where(a => a.FullName.Trim().ToLower() == bookModel.Author.FullName).FirstOrDefault();
-                if (existingAuthor != null)
-                {
-                    book.Authors.Add(existingAuthor);
-                }
-                else
-                {
-                    var newAuthor = new Author();
-                    newAuthor.FullName = bookModel.Author.FullName; 
-                    _context.Authors.Add(newAuthor);
-                    book.Authors.Add(newAuthor);
-                }
                 _context.Books.Add(book);
                 _context.SaveChanges();
                 return true;
@@ -123,21 +110,6 @@ namespace CatalogWeb.Controllers
                 if (existingBook != null)
                 {
                     SetModelAttributesToBook(bookModel, existingBook, _context);
-                    if (existingBook.Authors.Count == 0 || bookModel.Author.FullName != existingBook.Authors[0].FullName)
-                    {
-                        // create new author or use existing
-                        var existingAuthor = _context.Authors.Where(a => a.FullName.Trim().ToLower() == bookModel.Author.FullName).FirstOrDefault();
-                        if (existingAuthor != null)
-                        {
-                            existingBook.Authors.Add(existingAuthor);
-                        }
-                        else {
-                            var newAuthor = new Author();
-                            newAuthor.FullName = bookModel.Author.FullName;
-                            existingBook.Authors.Add(newAuthor);
-                            _context.Authors.Add(newAuthor);
-                        }
-                    }
 
                     _context.Books.Update(existingBook);
                     _context.SaveChanges();
@@ -175,17 +147,24 @@ namespace CatalogWeb.Controllers
 
         private static BookModel BookToModel(Book book)
         {
-            return new BookModel()
+            var bookModel = new BookModel()
             {
                 Id = book.Id,
                 Title = book.Title,
                 Description = book.Description,
                 IssueDate = book.IssueDate.ToDateTime(new TimeOnly(0, 0, 0)),
-                AuthorId = book.Authors[0].Id,
-                Author = new AuthorModel() {  Id = book.Authors[0].Id, FullName = book.Authors[0].FullName },
+                Authors = new List<AuthorModel>() { },
                 ImageId = book.ImageId,
+                AuthorsNames = ""
                 //Reviews = book.Reviews
             };
+            foreach (var author in book.Authors) {
+                bookModel.Authors.Add(new AuthorModel() { Id = author.Id, FullName = author.FullName });
+                bookModel.AuthorsNames += author.FullName + ", "; 
+            }
+            bookModel.AuthorsNames = bookModel.AuthorsNames.Trim();
+            bookModel.AuthorsNames = bookModel.AuthorsNames.TrimEnd(',');
+            return bookModel;
         }
 
         private static void SetModelAttributesToBook(BookModel model, Book book, CatalogDBContext context)
@@ -205,6 +184,38 @@ namespace CatalogWeb.Controllers
             {
                 book.ImageId = model.ImageId;
                 book.Image = context.Images.Where(x => x.Id == book.ImageId).FirstOrDefault();
+            }
+
+            
+            foreach (var authorModel in model.Authors) {
+                if (!book.Authors.Any(b => b.FullName.Trim() == authorModel.FullName.Trim()))
+                {
+                    // add author to book if not exist
+                    var existingAuthor = context.Authors.Where(a => a.FullName.Trim() == authorModel.FullName.Trim()).FirstOrDefault();
+                    if (existingAuthor == null)
+                    {
+                        var authorToAdd = new Author() { Id = authorModel.Id, FullName = authorModel.FullName.Trim() };
+                        context.Authors.Add(authorToAdd);
+                        book.Authors.Add(authorToAdd);
+                    }
+                    else
+                    {
+                        book.Authors.Add(existingAuthor);
+                    }
+                }
+            }
+            var itemsToRemove = new List<Author>() {  };
+            foreach (var existingBookAuthor in book.Authors)
+            {
+                var modelBookAuthor = model.Authors.Where(ba => ba.FullName.Trim() == existingBookAuthor.FullName.Trim()).FirstOrDefault();
+                if (modelBookAuthor == null)
+                {
+                    itemsToRemove.Add(existingBookAuthor);
+                }
+            }
+            foreach (var author in itemsToRemove)
+            {
+                book.Authors.Remove(author);
             }
             //book.Reviews = model.Reviews;
         }

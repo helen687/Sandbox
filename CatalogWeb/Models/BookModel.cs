@@ -6,7 +6,6 @@ namespace CatalogWeb.Models
     public class BookModel
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid? AuthorId { get; set; } = Guid.NewGuid();
         public Guid? ImageId { get; set; } = null;
 
         public string Title { get; set; } = String.Empty;
@@ -15,7 +14,8 @@ namespace CatalogWeb.Models
 
         public DateTime IssueDate { get; set; } = new DateTime();
 
-        public AuthorModel Author { get; set; }
+        public List<AuthorModel> Authors { get; set; }
+        public string AuthorsNames { get; set; }
         public List<Review> Reviews { get; set; } = new List<Review>();
 
     }
