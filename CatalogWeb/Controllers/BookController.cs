@@ -1,24 +1,19 @@
 using CatalogCore;
 using CatalogDB;
-using CatalogWeb;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CatalogWeb.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Net.Http.Headers;
-using System.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CatalogWeb.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    public class CatalogController : ControllerBase
+    public class BookController : ControllerBase
     {
-        private readonly ILogger<CatalogController> _logger;
+        private readonly ILogger<BookController> _logger;
         private readonly CatalogDBContext _context;
 
-        public CatalogController(ILogger<CatalogController> logger, CatalogDBContext context)
+        public BookController(ILogger<BookController> logger, CatalogDBContext context)
         {
             _logger = logger;
             _context = context;
@@ -81,8 +76,7 @@ namespace CatalogWeb.Controllers
             return ret;
         }
 
-        [Route("[controller]/[action]")]
-        [HttpPut(Name = "Put")]
+        [HttpPut]
         public bool Put(BookModel bookModel)
         {
             try
@@ -100,8 +94,7 @@ namespace CatalogWeb.Controllers
             }
         }
 
-        [Route("[controller]/[action]")]
-        [HttpPost(Name = "Post")]
+        [HttpPost]
         public bool Post(BookModel bookModel)
         {
             try
