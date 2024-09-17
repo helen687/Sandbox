@@ -41,9 +41,9 @@ namespace CatalogWeb.Controllers
         }
 
         [Route("{sortBy}/{sortOrder}/{pageIndex:int}/{pageSize:int}/{filterValue?}")]
-        public PaginatorResponseModel GetList(string sortBy, string sortOrder, int pageIndex, int pageSize, string filterValue = "")
+        public PaginatorResponseModel<BookModel> GetList(string sortBy, string sortOrder, int pageIndex, int pageSize, string filterValue = "")
         {
-            var ret = new PaginatorResponseModel();
+            var ret = new PaginatorResponseModel<BookModel>();
 
             try
             {

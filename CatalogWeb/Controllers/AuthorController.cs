@@ -44,21 +44,38 @@ namespace CatalogWeb.Controllers
             }
         }
 
-        [Route("{filterValue?}")]
-        public List<AuthorModel> GetList(string filterValue = "")
+        [Route("{sortBy}/{sortOrder}/{pageIndex:int}/{pageSize:int}/{filterValue?}")]
+        public PaginatorResponseModel<AuthorModel> GetList(string sortBy, string sortOrder, int pageIndex, int pageSize, string filterValue = "")
         {
+            var ret = new PaginatorResponseModel<AuthorModel>();
             try
             {
                 var datasource = _context.Authors.ToList();
                 if (filterValue != null && filterValue != String.Empty) {
                     datasource = datasource.Where(x => x.FullName.ToLower().Contains(filterValue.ToLower())).ToList();
                 }
-                return datasource.Select(a => AuthorToModel(a)).OrderBy(a => a.FullName).ToList();
+                ret.Length = datasource.Count;
+                ret.PageIndex = pageIndex;
+                ret.PageSize = pageSize;
+                switch (sortBy)
+                {
+                    case "fullName":
+                        datasource = datasource.OrderBy(x => x.FullName).ToList();
+                        break;
+                }
+                if (sortOrder == "desc")
+                {
+                    datasource.Reverse();
+                }
+                datasource = datasource.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+                ret.DataSource = datasource.Select(a => AuthorToModel(a)).ToArray();
+                ret.Error = "";
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while retrieving an author", ex);
+                ret.Error = "An error occurred while retreiving a list of authors";
             }
+            return ret;
         }
 
         [HttpPut]
