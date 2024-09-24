@@ -181,26 +181,17 @@ namespace CatalogWeb.Controllers
 
             
             foreach (var authorModel in model.Authors) {
-                if (!book.Authors.Any(b => b.FullName.Trim() == authorModel.FullName.Trim()))
+                var existingAuthor = book.Authors.Where(a => a.Id == authorModel.Id).FirstOrDefault();
+                if (existingAuthor == null)
                 {
-                    // add author to book if not exist
-                    var existingAuthor = context.Authors.Where(a => a.FullName.Trim() == authorModel.FullName.Trim()).FirstOrDefault();
-                    if (existingAuthor == null)
-                    {
-                        var authorToAdd = new Author() { Id = authorModel.Id, FullName = authorModel.FullName.Trim() };
-                        context.Authors.Add(authorToAdd);
-                        book.Authors.Add(authorToAdd);
-                    }
-                    else
-                    {
-                        book.Authors.Add(existingAuthor);
-                    }
+                    var authorToAdd = new Author() { Id = authorModel.Id, FullName = authorModel.FullName.Trim() };
+                    book.Authors.Add(authorToAdd);
                 }
             }
             var itemsToRemove = new List<Author>() {  };
             foreach (var existingBookAuthor in book.Authors)
             {
-                var modelBookAuthor = model.Authors.Where(ba => ba.FullName.Trim() == existingBookAuthor.FullName.Trim()).FirstOrDefault();
+                var modelBookAuthor = model.Authors.Where(ba => ba.Id == existingBookAuthor.Id).FirstOrDefault();
                 if (modelBookAuthor == null)
                 {
                     itemsToRemove.Add(existingBookAuthor);
